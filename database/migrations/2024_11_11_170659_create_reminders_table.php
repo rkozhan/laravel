@@ -17,6 +17,8 @@ return new class extends Migration
             $table->dateTime('reminder_time');
             $table->boolean('is_sent')->default(false);
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 
