@@ -16,11 +16,12 @@ class ReminderController extends BaseController
     /**
      * Display a listing of the resource.
      *
-     * @param int $event_id
-     * @return Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index(int $event_id): Response
+    public function index(Request $request): JsonResponse
     {
+        $event_id = $request->event_id;
         $reminders = Reminder::where('event_id', $event_id)
             //->where('is_sent', 0)
             ->orderBy('reminder_time', 'asc')

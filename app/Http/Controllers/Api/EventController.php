@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Event;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Response;
@@ -16,9 +17,9 @@ class EventController extends BaseController
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function index(Request $request): Response
+    public function index(Request $request): JsonResponse
     {
         $events = $this->getEventsUpcomingOrAll($request)
             ->orderBy('date', 'asc')
@@ -26,14 +27,13 @@ class EventController extends BaseController
 
         return $this->sendResponse(EventResource::collection($events), 'Events retrieved successfully.');
     }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function store(Request $request): Response
+    public function store(Request $request): JsonResponse
     {
         $input = $request->all();
 
@@ -54,9 +54,9 @@ class EventController extends BaseController
      * Display the specified resource.
      *
      * @param Event $event
-     * @return Response
+     * @return JsonResponse
      */
-    public function show(Event $event): Response
+    public function show(Event $event): JsonResponse
     {
         if (!$this->checkUserId($event)) {
             return $this->sendError('Unauthorized.');
@@ -70,9 +70,9 @@ class EventController extends BaseController
      *
      * @param Request $request
      * @param Event $event
-     * @return Response
+     * @return JsonResponse
      */
-    public function update(Request $request, Event $event): Response
+    public function update(Request $request, Event $event): JsonResponse
     {
         if (!$this->checkUserId($event)) {
             return $this->sendError('Unauthorized.');
@@ -97,9 +97,9 @@ class EventController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param Event $event
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy(Event $event): Response
+    public function destroy(Event $event): JsonResponse
     {
         if (!$this->checkUserId($event)) {
             return $this->sendError('Unauthorized.');
@@ -123,7 +123,7 @@ class EventController extends BaseController
         return $event->user_id == auth()->id();
     }
 
-    private function getEventsUpcomingOrAll(Request $request): \Illuminate\Database\Eloquent\Builder
+    private function getEventsUpcomingOrAll(Request $request): Builder
     {
         if ($request->query('past', 'false') === 'true') return Event::where('user_id', auth()->id());
 
