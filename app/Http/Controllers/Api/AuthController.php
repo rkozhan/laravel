@@ -14,7 +14,7 @@ class AuthController extends Controller
     /**
      * Create User
      * @param Request $request
-     * @return User
+     * @return \Illuminate\Http\JsonResponse
      */
     public function createUser(Request $request)
     {
@@ -59,7 +59,7 @@ class AuthController extends Controller
     /**
      * Login The User
      * @param Request $request
-     * @return User
+     * @return \Illuminate\Http\JsonResponse
      */
     public function loginUser(Request $request)
     {
