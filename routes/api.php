@@ -21,9 +21,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('events', EventController::class)->except(['index']);
 });
 */
-/*
+
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('reminders', ReminderController::class);
 });
-*/
-Route::get('reminders', [ReminderController::class, 'index']);
+
+//Route::get('reminders', [ReminderController::class, 'index']);

@@ -23,7 +23,7 @@ class ReminderController extends BaseController
     {
         $event_id = $request->event_id;
         $reminders = Reminder::where('event_id', $event_id)
-            //->where('is_sent', 0)
+            ->where('is_sent', 0)
             ->orderBy('reminder_time', 'asc')
             ->get();
 
@@ -34,10 +34,14 @@ class ReminderController extends BaseController
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function store(Request $request): Response
+    public function store(Request $request): JsonResponse
     {
+        if (!$this->checkUserId($request->event_id)) {
+            return $this->sendError('Unauthorized.');
+        }
+
         $input = $request->all();
 
         $validator = $this->validateReminder($request);
@@ -55,7 +59,7 @@ class ReminderController extends BaseController
      * Display the specified resource.
      *
      * @param Reminder $reminder
-     * @return Response
+     * @return JsonResponse
      */
     public function show(Reminder $reminder)
     {
@@ -67,11 +71,11 @@ class ReminderController extends BaseController
      *
      * @param Request $request
      * @param Reminder $reminder
-     * @return Response
+     * @return JsonResponse
      */
     public function update(Request $request, Reminder $reminder)
     {
-        if (!$this->checkUserId($reminder)) {
+        if (!$this->checkUserId($reminder->event_id)) {
             return $this->sendError('Unauthorized.');
         }
 
@@ -94,11 +98,11 @@ class ReminderController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param Reminder $reminder
-     * @return Response
+     * @return JsonResponse
      */
     public function destroy(Reminder $reminder)
     {
-        if (!$this->checkUserId($reminder)) {
+        if (!$this->checkUserId($reminder->event_id)) {
             return $this->sendError('Unauthorized.');
         }
 
@@ -114,9 +118,9 @@ class ReminderController extends BaseController
         ]);
     }
 
-    private function checkUserId(Reminder $reminder): bool
+    private function checkUserId(int $event_id): bool
     {
-        $event = Event::find($reminder->event_id);
+        $event = Event::find($event_id);
         return $event->user_id == auth()->id();
     }
 }
