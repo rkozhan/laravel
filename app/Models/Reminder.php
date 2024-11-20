@@ -17,14 +17,4 @@ class Reminder extends Model
     {
         return $this->belongsTo(Event::class);
     }
-
-
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'is_sent' => 'boolean',
-    ];
 }
